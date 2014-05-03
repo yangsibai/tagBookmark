@@ -1,0 +1,198 @@
+#webMark_bar {
+    font-family: "Microsoft Yahei";
+    font-size: 14px;
+}
+
+#webMark_placeHolder {
+    height: 38px;
+}
+
+#webMark_heart {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFFklEQVRYR81Xe0wTdxz/Hhh14+FhcMJYoKACYyQtKyBTInVu0UwXu+kfLHOzJpsJEoXCkEzCVmFZeBgoy4RlkK1EouxBrJksGKPcyHTykrLEQXhY0DHKBtvJw8UH3n7fkyt3bWlvmMX9/uhd+/s+Pt/3txQ85kM9Zv3w/wTwkyZxL0GmDUjepPV5Npb1Xr6Mnbh4gZ25ZjFPTnHGlzs7b7ny3KUNcWFLlnrrnoiMyVyZ8iJPcm98nJ36pZuZ7us1bWhu/8GRT+KB82r1Cj8/L2NYepYucNt2WOLrJ9APkRfFHdtvcPOzT9mJlvO6pOaOM2JhCDowZYvxKe0u2l+ldsJn+7Yeho+XGZOYdr34UgKg4/Wtp6OLP9EuCwqG8aZGsDXUw92xUaA3bgJ/pRoEUGJhCDpwTZAh7GBOZkByCswM9MEY4Zu0XOV5/ZTPQ/CefSytTqQnLZ3Qo0/LJCAqBBB2AGiBIl1vQiX9+YdhqvuqkxVLVwdDWLoeUBEKGzaWMl6+fnTYIb3CNzKGHqmthpHaGpd5HXpAD0G7U9ELMFZfp1r/Y1c3EtoB9ORmWKOLjAqeoOErt8WxasdONjzrCD1HxJInfb24AMbPNbrliy6rhCfXRkLnqy+Zk5i21+wAWpPjlGsLSxn/+ES6+w0tzM5MPxTEcSxQlKBIIjxw63aIyP2AvT95C3qz0+nbg/0eKxpDGVlYCn35ORD10THeeP7jiiYhQ3XKbPx75Fe2L+fgQ4VulAuaUODtgX4+1nJP4sVWEiYSqpoqPgw8gFZN/IeJze0GdzGUq8ATnfLkabhjG4VrWWkaLEsJAMzuG5XlnmRI72V4SsywIADlqTMGRNabdUA+gH+pHAVjCHhDK0pEISBJGJ5XYFm1bQfJ0C3zSegKyiKUinMGk9Ba9jEbkZ0XYE9CfLFWHLMqDmUrFsyDR1AsABDK8Gddqknd8P0+CQBsRDHllSZso5Y3tezd0VHn8nsEEHNly1fA8OdVio2Xu4YlAPCL0Iywnfbq09yHQn6mAHbQ2OoTMDs9BT0Z+41xXzfa54FkFmBDCnknzRKy9132j6aztLWk0FnNQl7A33mTpI3L28cX1hWWAHq2L+89y41zjEY8TZ32AWxKsdV1Rh/SMuW0ZU9Na11BCT87HGeAYJnLhaRz1ytfRhWV6xCEnB5vd5ODd8IP5wNWFvEmDBYX6l5g2modXbrgRmR5e3fXc8e/UOFOgL2bvdTi3IBELuc4GKIoUAhEwvRD5cQIpz3ArQfwEud8cFIcE1VUxoNw5wlH5XOW83lE+Exk/vMl5+q43QkRRMAzKxllXQMPYsBwhP2z5cJ8eTokHiYcmZB8zNHymzVV9npfFADBE6uVkaaI9w1azAnJvBDFHEsNsx1pULm1+KhhPdNx1FO1yt6KxYmJ2xBuTfzeQECQJYOOLq/id0hss79/ZzaI1y53IGQDQCHYLdfk5psws3FBRRDLQ0JZRVYugJcXPVxROjTRdFYrrFuerHfqhHIYLm9OSAlJfcscun9ucSFMCOZ6UQHzV3ubTmixcmQtCgAy4f6/Ik5tfjp1jwpHuO2bOuP4oM2w0P8FjyG4sjl+J3CUhhCqpMSUQlzbTmuazOHEcRwzL5diKXhggfuzZtFKltBFeriDcsLiToFwJ4fGhQsecMB3RnsSYmy9gKMpztELBAfggKEU5A2fZOjg09NBOjwcsZgbEqg5CizUvdkhp/8FnsT9V/f/ADMFcT9h/nuhAAAAAElFTkSuQmCC);
+    width: 32px;
+    height: 32px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 999999;
+    opacity: 0.7;
+}
+
+#webMark_heart:hover {
+    opacity: 1;
+}
+
+#webMark_bar {
+    height: 30px;
+    width: 100%;
+    margin: 0;
+    padding: 3px 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid #F8D6D6;
+    box-shadow: 1px 1px 1px #C9A8A8;
+    text-align: left;
+    z-index: 99999999;
+    background-color: #F0F0F0;
+    overflow: hidden;
+}
+
+#webMark_bar .tag_list {
+    float: left;
+    margin: 5px 100px 5px 0;
+    padding: 0;
+}
+
+#webMark_bar .tag_list .tag {
+    display: inline-block;
+    list-style-type: none;
+    cursor: pointer;
+    margin-right: 5px;
+    padding: 3px;
+    border: 1px solid #F0F0F0;
+    border-radius: 3px;
+}
+
+#webMark_bar .tag_list .tag:hover {
+    border: 1px solid #fefefe;
+    background-color: #fcfcfc;
+}
+
+#webMark_bar .name {
+    font-size: 14px;
+    color: #7c07a9;
+}
+
+#webMark_bar .name:hover {
+    color: #0C0874;
+    font-weight: 300;
+}
+
+#webMark_bar .count {
+    color: #5A016D;
+    background-color: #ABF1DE;
+    margin-left: 5px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+#webMark_bar .count:hover {
+    background-color: #5DD0C0;
+}
+
+#webMark_bar #webMark_close_btn {
+    height: 22px;
+    width: 70px;
+    float: right;
+    border-radius: 3px;
+    background-color: #00A584;
+    color: #fff;
+    position: fixed;
+    top: 7px;
+    right: 20px;
+    cursor: pointer;
+}
+
+#webMark_bar #webMark_close_btn:hover {
+    color: #f0f0f0;
+    background-color: #00a576;
+}
+
+.webMark_addBookmark {
+    padding: 0 10px;
+    margin: 10px;
+}
+
+.webMark_addBookmark > label, input, small {
+    /*display: block;*/
+}
+
+.webMark_addBookmark label {
+    margin: 10px 0 5px;
+}
+
+.webMark_addBookmark input {
+    width: 350px;
+    height: 20px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    border: 1px solid #dad7db;
+}
+
+.webMark_addBookmark button {
+    margin-top: 20px;
+}
+
+.webMark_addBookmark small {
+    color: #666;
+    margin-top: 5px;
+}
+
+.webMark_addBookmark button {
+    border: none;
+    padding: 2px 10px;
+    border-radius: 5px;
+    width: 60px;
+    height: 25px;
+    color: #333;
+    cursor: pointer;
+}
+
+.webMark_addBookmark button:hover {
+    color: #fff;
+}
+
+.webMark_addBookmark .add {
+    background-color: #777BD6;
+    box-shadow: 1px 1px 1px #6447D5;
+}
+
+.webMark_addBookmark .cancel {
+    box-shadow: 1px 1px 1px #DDD;
+}
+
+#webMark_bar .pop {
+    width: 250px;
+    position: fixed;
+    margin-top: 10px;
+    margin-left: -100px;
+    max-height: 80%;
+    overflow: auto;
+}
+
+#webMark_bar .pop .arrow {
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid #e0e0e0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    margin-left: 125px;
+}
+
+#webMark_bar .bookmark_list {
+    background-color: #e0e0e0;
+    width: 250px;
+    box-shadow: 1px 1px 1px #ddd;
+    padding: 10px;
+    margin: 0;
+}
+
+#webMark_bar .bookmark_list .bookmark {
+    margin: 8px 0;
+    word-break: break-word;
+}
+
+#webMark_bar .bookmark_list .bookmark a {
+    padding: 2px 3px;
+    color: #37A;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+#webMark_bar .bookmark_list .bookmark a:hover {
+    background-color: #37A;
+    color: #F0F0F0;
+}

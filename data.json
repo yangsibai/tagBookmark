@@ -1,0 +1,26 @@
+{
+    "summary": {
+        "totalCount": 100,
+        "tags": [{
+            "search": 45,
+        } {
+            "code": 23,
+        } {
+            "test": 100
+        }]
+    },
+    "bookmarks": [{
+            "id": 1,
+            "url": "http://www.baidu.com",
+            "tag": [
+                "search",
+                "baidu",
+                "test"
+            ],
+            "addTime": "2014-5-1",
+            "lastAccessTime": "2014-5-10",
+            "accessCount": 100
+        },
+        []
+    ]
+}

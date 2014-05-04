@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a79dd238-c0ec-4855-bc0b-e4e06b63b266" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/contentScripts.js" afterPath="$PROJECT_DIR$/js/contentScripts.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
-    </list>
+    <list default="true" id="a79dd238-c0ec-4855-bc0b-e4e06b63b266" name="Default" comment="" />
     <ignored path="webmark.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />

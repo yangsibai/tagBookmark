@@ -23,13 +23,29 @@
                     ].join('');
                     bookMarkBar += span;
                 }
-                var closeBtn = '<button id="webMark_close_btn">close</button>';
-                bookMarkBar += '</ul>' + closeBtn + '</div>';
+                var operateBtn = ['<div class="operate">',
+                    '<button id="webMark_down_btn"></button>',
+                    '<button id="webMark_up_btn"></button>',
+                    '<button id="webMark_close_btn"></button>',
+                    '</div>'].join('');
+                bookMarkBar += '</ul>' + operateBtn + '</div>';
                 $('body').prepend(bookMarkBar).prepend('<p id="webMark_placeHolder" class="markBar"></p>').hide().slideDown();
 
                 $("#webMark_close_btn").click(function () {
                     $(".markBar").remove();
                     showHeart();
+                });
+
+                $("#webMark_down_btn").click(function () {
+                    $(this).hide();
+                    $("#webMark_bar").css('height', 'auto');
+                    $("#webMark_up_btn").show();
+                });
+
+                $("#webMark_up_btn").click(function () {
+                    $(this).hide();
+                    $("#webMark_bar").css('height', '30px');
+                    $("#webMark_down_btn").show();
                 });
 
                 $("#webMark_bar .tag").click(function (e) {

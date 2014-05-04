@@ -41,7 +41,7 @@
 
 #webMark_bar .tag_list {
     float: left;
-    margin: 5px 100px 5px 0;
+    margin: 2px 80px 2px 150px;
     padding: 0;
 }
 
@@ -53,6 +53,7 @@
     padding: 3px;
     border: 1px solid #F0F0F0;
     border-radius: 3px;
+    line-height: 18px;
 }
 
 #webMark_bar .tag_list .tag:hover {
@@ -83,21 +84,35 @@
     background-color: #5DD0C0;
 }
 
-#webMark_bar #webMark_close_btn {
-    height: 22px;
-    width: 70px;
-    float: right;
-    border-radius: 3px;
-    background-color: #00A584;
-    color: #fff;
+#webMark_bar .operate {
     position: fixed;
-    top: 7px;
-    right: 20px;
-    cursor: pointer;
+    top: 10px;
+    right: 8px;
 }
 
-#webMark_bar #webMark_close_btn:hover {
-    color: #f0f0f0;
+#webMark_bar .operate button {
+    margin-right: 8px;
+    border: none;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    background: no-repeat center;
+}
+
+#webMark_bar #webMark_close_btn {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAyUlEQVQ4T6WT3Q3DIAyEC2KQjNBugMgiyWTJIiAyQbtBOwiC4khG/BiUqnnKw/nD9p3Z7c+P5fVSyru19jViRs0UNR/UJIBSauGcbyGEXWu9UhDUeO9XY8wOmhMALwshnlhEQbAYNc65B3SbOpjneWOMLRSkLs4fKHZAQaL4gNF63RUAENWQfBfUaA2gB+ktlwTUMwP0MoAqHrlTdEBt+/S6407KAfyMrBpZjEGaYpDeo1ZrSBOkK1FGSBNlfPniMRUHR9r4y4V/ATbsrBEEuJalAAAAAElFTkSuQmCC);
+}
+
+#webMark_bar #webMark_down_btn {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAt0lEQVQ4T2NkoDJgpLJ5DKMGUh6i6GEoCTRyORDzEGn0Z6C6KCB+DlOPbiAvUOI4EGsTaeBloDprIAYZDAbYYlkKKH4CiGUJGPoQKG+J7DpcBoLEQS48CsT8OAz9AHXZNXR5fOnQHah4CxCzoGn6BeSD5A5gs4xQwk4GapqDphEkNg9XcBAyEKSvA4jLoQa0AelqfGFLjIFMQAM6gfgfEFdCaZxmEmMgPgdhyI0aSFJwYVVM9TAEAG80FhW3SjK/AAAAAElFTkSuQmCC);
+}
+
+#webMark_bar #webMark_up_btn {
+    display: none;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAsUlEQVQ4T2NkoDJgpLJ5DKMGUh6ixIQhE9CaDqhVFUD6Hz5riTFwFtCAVKghc5DYWM0lZGAxUFcPms5SLGJwJfgMDAaqWgXEIC8jg/9ATgwQL8PmRFwGWgIV7wNiDhzh9QMo7gzEx9DlsRmoClUoQiDO3wLlQRbfRlaHbiAv1DAdAobBpK9CDf0ME0A3UBIoAYpJNiIN/AVUlwLEz3EZSKQ5uJURSjYkWzBqIMlBhqEBAKUTFRWStpKLAAAAAElFTkSuQmCC) no-repeat;
+}
+
+#webMark_bar .operate button:hover {
     background-color: #00a576;
 }
 

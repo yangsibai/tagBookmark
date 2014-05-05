@@ -176,6 +176,7 @@
     margin-left: -100px;
     max-height: 80%;
     overflow: auto;
+    border-bottom: 1px solid #3BDE64;
 }
 
 #webMark_bar .pop .arrow {
@@ -192,6 +193,8 @@
     margin: 0;
     padding: 10px;
     background: repeat center;
+    border-left: 1px solid #3BDE64;
+    border-top: 1px solid #3BDE64;
 }
 
 #webMark_bar .bookmark_list .bookmark {

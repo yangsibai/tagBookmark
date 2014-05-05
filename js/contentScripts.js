@@ -86,6 +86,8 @@
                             x = 110;
                         }
                         $("#webMark_bar .pop").css('top', y).css('left', x);
+                        var backurl = chrome.extension.getURL('img/crossword.png');
+                        $("#webMark_bar .bookmark_list").css('background-image', 'url(' + backurl + ')');
                     });
                 });
             });

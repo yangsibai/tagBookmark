@@ -61,7 +61,7 @@ var fetchBookmarks = function (node, folderName, list) {
     else {
         list.push({
             "id": node.id,
-            "tags": folderName,
+            "tags": folderName || 'unknown',
             "title": node.title,
             "url": node.url,
             "addTime": node.dateAdded

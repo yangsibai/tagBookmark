@@ -12,7 +12,7 @@
     width: 32px;
     height: 32px;
     position: fixed;
-    top: 10px;
+    bottom: 10px;
     left: 10px;
     cursor: pointer;
     z-index: 999999;
@@ -181,22 +181,21 @@
 #webMark_bar .pop .arrow {
     width: 0;
     height: 0;
-    border-bottom: 10px solid #e0e0e0;
+    border-bottom: 10px solid #3bde64;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     margin-left: 125px;
 }
 
 #webMark_bar .bookmark_list {
-    background-color: #e0e0e0;
-    width: 250px;
     box-shadow: 1px 1px 1px #ddd;
-    padding: 10px;
     margin: 0;
+    padding: 10px;
+    background: repeat center;
 }
 
 #webMark_bar .bookmark_list .bookmark {
-    margin: 8px 0;
+    margin: 8px 0 0 30px;
     word-break: break-word;
 }
 

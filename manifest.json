@@ -34,9 +34,14 @@
         }
     ],
     "background": {
-        "scripts": ["/js/background.js"]
+        "scripts": [
+            "/dropbox/dropbox.min.js",
+            "/js/background.js"
+        ]
     },
     "web_accessible_resources": [
-        "/img/crossword.png"
+        "/img/crossword.png",
+        "/dropbox/chrome_oauth_receiver.html",
+        "test.html"
     ]
 }

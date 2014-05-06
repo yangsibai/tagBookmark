@@ -1,11 +1,16 @@
 var client = new Dropbox.Client({
-    key: "2l9256omgxuptj7",
-    secret: "st1c637uqtgxt4l"
+    key: "2l9256omgxuptj7"
 });
 
-client.authDriver(new Dropbox.AuthDriver.Popup({
-    receiverUrl: '/dropbox/chrome_oauth_receiver.html'
+client.authDriver(new Dropbox.AuthDriver.ChromeExtension({
+    receiverPath: 'dropbox/chrome_oauth_receiver.html'
 }));
+
+client.authenticate(function (err, client) {
+    if (err) {
+        alert(err);
+    }
+});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {

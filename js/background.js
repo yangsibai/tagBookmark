@@ -6,9 +6,9 @@ client.authDriver(new Dropbox.AuthDriver.ChromeExtension({
     receiverPath: 'dropbox/chrome_oauth_receiver.html'
 }));
 
-client.authenticate(function (err, client) {
-    if (err) {
-        alert(err);
+readFile(function (err, content) {
+    if (!err) {
+        localStorage.data = content || '{}';
     }
 });
 
@@ -121,6 +121,28 @@ chrome.runtime.onInstalled.addListener(function () {
                     });
                 }
                 localStorage.data = JSON.stringify(data);
+                updateFile(function (err) {
+                    if (err) {
+                        chrome.notifications.create('notify', {
+                            type: 'basic',
+                            title: 'Error',
+                            message: 'Can not save data in dropbox,error:' + err.message,
+                            iconUrl: '/icons/error_64.png'
+                        }, function () {
+
+                        });
+                    }
+                    else {
+                        chrome.notifications.create('notify', {
+                            type: 'basic',
+                            title: 'Success',
+                            message: 'Save data in dropbox successfully',
+                            iconUrl: '/icons/success_64.png'
+                        }, function () {
+
+                        });
+                    }
+                });
             }
             catch (e) {
                 console.dir(e);
@@ -202,6 +224,43 @@ function addBookmark(data, obj, save) {
     catch (e) {
         console.dir(e);
     }
+}
+
+/**
+ * update data file in dropbox
+ */
+function updateFile(cb) {
+    client.authenticate(function (err, client) {
+        if (err) {
+            if (typeof cb === 'function') {
+                cb(err);
+            }
+        }
+        else {
+            client.writeFile('data.json', localStorage.data || {}, function (err, stat) {
+                if (typeof cb === 'function') {
+                    cb(err, stat);
+                }
+            });
+        }
+    });
+}
+
+/**
+ * 读取dropbox的文件数据
+ * @param cb
+ */
+function readFile(cb) {
+    client.authenticate(function (err, client) {
+        if (err) {
+            cb(err);
+        }
+        else {
+            client.readFile('data2.json', function (err, content, stat, rangeInfo) {
+                cb(err, content);
+            });
+        }
+    });
 }
 
 /**

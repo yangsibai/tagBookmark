@@ -32,12 +32,18 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
             "title": title,
             "url": url,
             "tags": tags
-        }, true);
-        chrome.pageAction.setIcon({
-            tabId: tab.id,
-            path: 'icons/heart_b_24.png'
-        }, function () {
-            window.close();
+        }, true, function (err) {
+            if (err) {
+                alert(err);
+            }
+            else {
+                chrome.pageAction.setIcon({
+                    tabId: tab.id,
+                    path: 'icons/heart_b_24.png'
+                }, function () {
+                    window.close();
+                });
+            }
         });
     })
 });

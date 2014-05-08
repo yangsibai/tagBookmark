@@ -157,7 +157,7 @@ chrome.runtime.onInstalled.addListener(function () {
  * @param title
  * @param url
  */
-function addBookmark(data, obj, save) {
+function addBookmark(data, obj, save, cb) {
     try {
         var title = obj.title;
         var url = obj.url;
@@ -219,6 +219,7 @@ function addBookmark(data, obj, save) {
 
         if (save) {
             localStorage.data = JSON.stringify(data);
+            updateFile(cb);
         }
     }
     catch (e) {
@@ -256,7 +257,7 @@ function readFile(cb) {
             cb(err);
         }
         else {
-            client.readFile('data2.json', function (err, content, stat, rangeInfo) {
+            client.readFile('data.json', function (err, content, stat, rangeInfo) {
                 cb(err, content);
             });
         }

@@ -8,19 +8,12 @@ client.authDriver(new Dropbox.AuthDriver.ChromeExtension({
 
 var isCommunicateDropbox = false;
 
-
-readFile(function(err, content) {
-    if (!err) {
-        localStorage.data = content || '{}';
-    }
-});
-
 chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+    function (request, sender, sendResponse) {
         var cmd = request.cmd;
         if (cmd === 'getTags') {
             var data = JSON.parse(localStorage.data);
-            data.tags.sort(function(a, b) {
+            data.tags.sort(function (a, b) {
                 return b.links.length - a.links.length;
             });
             sendResponse(data.tags);
@@ -38,7 +31,7 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     chrome.pageAction.show(tabId);
     if (getBookmark(tab.url)) { //如果包含了该地址
         chrome.pageAction.setIcon({
@@ -53,7 +46,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
  * get bookmark by url,if not exist,return null
  * @param url
  */
-var getBookmark = function(url) {
+var getBookmark = function (url) {
     if (typeof url === 'undefined') {
         return null;
     }
@@ -69,7 +62,7 @@ var getBookmark = function(url) {
     return null;
 };
 
-var fetchBookmarks = function(node, folderName, list) {
+var fetchBookmarks = function (node, folderName, list) {
     if (typeof node.children !== 'undefined') {
         for (var i = 0; i < node.children.length; i++) {
             fetchBookmarks(node.children[i], node.title, list);
@@ -85,8 +78,43 @@ var fetchBookmarks = function(node, folderName, list) {
     }
 };
 
-chrome.runtime.onInstalled.addListener(function() {
-    var data = {
+chrome.runtime.onInstalled.addListener(function () {
+    /**
+     * 读取dropbox的文件数据
+     * @param cb
+     */
+    isCommunicateDropbox = true;
+    client.authenticate(function (err, client) {
+        if (err) {
+            mergeExistBookmarks();
+        } else {
+            client.readFile('data.json', function (err, content, stat, rangeInfo) {
+                isCommunicateDropbox = false;
+                if (!err) {
+                    localStorage.data = content || '{}';
+                    chrome.notifications.create('notify', {
+                        type: 'basic',
+                        title: 'Load data success',
+                        message: 'Load data of dropbox successfully',
+                        iconUrl: '/icons/success_64.png'
+                    }, function (notifyId) {
+                        setTimeout(function () {
+                            chrome.notifications.clear(notifyId, function () {
+                                mergeExistBookmarks(JSON.parse(content));
+                            });
+                        }, 2000);
+                    });
+                }
+                else {
+                    mergeExistBookmarks(JSON.parse(content));
+                }
+            });
+        }
+    });
+});
+
+function mergeExistBookmarks(existData) {
+    var data = existData || {
         "tags": [],
         "bookmarks": []
     };
@@ -97,11 +125,11 @@ chrome.runtime.onInstalled.addListener(function() {
         message: '正在转移书签数据',
         iconUrl: "/icons/heart_r_64.png",
         progress: 0
-    }, function(notificationId) {
+    }, function (notificationId) {
         /**
          * 初始化书签
          */
-        chrome.bookmarks.getTree(function(results) {
+        chrome.bookmarks.getTree(function (results) {
             try {
                 var list = [];
                 fetchBookmarks(results[0], '', list);
@@ -111,23 +139,24 @@ chrome.runtime.onInstalled.addListener(function() {
                     var progress = parseInt((i + 1) * 100 / list.length);
                     chrome.notifications.update(notificationId, {
                         progress: progress
-                    }, function() {
+                    }, function () {
                         if (progress === 100) {
-                            setTimeout(function() {
-                                chrome.notifications.clear(notificationId, function() {});
+                            setTimeout(function () {
+                                chrome.notifications.clear(notificationId, function () {
+                                });
                             }, 3 * 1000); //3秒钟之后清除
                         }
                     });
                 }
                 localStorage.data = JSON.stringify(data);
-                updateFile(function(err) {
+                updateFile(function (err) {
                     if (err) {
                         chrome.notifications.create('notify', {
                             type: 'basic',
                             title: 'Error',
                             message: 'Can not save data in dropbox,error:' + err.message,
                             iconUrl: '/icons/error_64.png'
-                        }, function() {
+                        }, function () {
 
                         });
                     } else {
@@ -136,7 +165,7 @@ chrome.runtime.onInstalled.addListener(function() {
                             title: 'Success',
                             message: 'Save data in dropbox successfully',
                             iconUrl: '/icons/success_64.png'
-                        }, function() {
+                        }, function () {
 
                         });
                     }
@@ -146,7 +175,7 @@ chrome.runtime.onInstalled.addListener(function() {
             }
         });
     });
-});
+};
 
 /**
  * 添加书签
@@ -183,10 +212,12 @@ function addBookmark(data, obj, save, cb) {
                 data.tags.push({
                     "name": tmpTag,
                     "lastModifyTime": new Date().getTime(),
-                    links: [{
-                        "title": title,
-                        "url": url
-                    }]
+                    links: [
+                        {
+                            "title": title,
+                            "url": url
+                        }
+                    ]
                 });
             }
         }
@@ -226,20 +257,20 @@ function addBookmark(data, obj, save, cb) {
  * update data file in dropbox
  */
 
-var updateFile = function(cb) {
+var updateFile = function (cb) {
     if (isCommunicateDropbox) {
-        setTimeout(function() {
+        setTimeout(function () {
             updateFile(cb);
         }, 5 * 1000);
     } else {
         isCommunicateDropbox = true;
-        client.authenticate(function(err, client) {
+        client.authenticate(function (err, client) {
             if (err) {
                 if (typeof cb === 'function') {
                     cb(err);
                 }
             } else {
-                client.writeFile('data.json', localStorage.data || {}, function(err, stat) {
+                client.writeFile('data.json', localStorage.data || {}, function (err, stat) {
                     isCommunicateDropbox = false;
                     if (typeof cb === 'function') {
                         cb(err, stat);
@@ -251,37 +282,18 @@ var updateFile = function(cb) {
 }
 
 /**
- * 读取dropbox的文件数据
- * @param cb
+ * 去掉数据组重复的项
+ * @param array
+ * @return {Array}
  */
 
-    function readFile(cb) {
-        isCommunicateDropbox = true;
-        client.authenticate(function(err, client) {
-            if (err) {
-                cb(err);
-            } else {
-                client.readFile('data.json', function(err, content, stat, rangeInfo) {
-                    isCommunicateDropbox = false;
-                    cb(err, content);
-                });
-            }
-        });
-    }
-
-    /**
-     * 去掉数据组重复的项
-     * @param array
-     * @return {Array}
-     */
-
-    function trimRepeat(array) {
-        var result = [];
-        for (var i = 0; i < array.length; i++) {
-            var tmp = array[i];
-            if (result.indexOf(tmp) === -1) {
-                result.push(tmp);
-            }
+function trimRepeat(array) {
+    var result = [];
+    for (var i = 0; i < array.length; i++) {
+        var tmp = array[i];
+        if (result.indexOf(tmp) === -1) {
+            result.push(tmp);
         }
-        return result;
     }
+    return result;
+}

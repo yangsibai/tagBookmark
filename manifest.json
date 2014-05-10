@@ -41,7 +41,6 @@
     },
     "web_accessible_resources": [
         "/img/crossword.png",
-        "/dropbox/chrome_oauth_receiver.html",
-        "test.html"
+        "/dropbox/chrome_oauth_receiver.html"
     ]
 }

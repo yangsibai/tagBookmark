@@ -8,7 +8,10 @@
             chrome.runtime.sendMessage({
                 cmd: 'getTags'
             }, function (tags) {
-                var bookMarkBar = '<div id="webMark_bar" class="markBar"><ul class="tag_list">';
+                var bookMarkBar = [];
+                bookMarkBar.push('<div id="webMark_bar" class="markBar">');
+                bookMarkBar.push('<input type="text" class="search" value="" placeholder="name or tag"/>');
+                bookMarkBar.push('<ul class="tag_list">');
                 for (var i = 0; i < tags.length; i++) {
                     var tag = tags[i];
                     var span = [
@@ -21,15 +24,26 @@
                         '</span>',
                         '</li>'
                     ].join('');
-                    bookMarkBar += span;
+
+                    bookMarkBar.push(span);
                 }
-                var operateBtn = ['<div class="operate">',
+                bookMarkBar.push('</ul>');
+                var operateBtn = [
+                    '<div class="operate">',
                     '<button id="webMark_down_btn"></button>',
                     '<button id="webMark_up_btn"></button>',
                     '<button id="webMark_close_btn"></button>',
-                    '</div>'].join('');
-                bookMarkBar += '</ul>' + operateBtn + '</div>';
-                $('body').prepend(bookMarkBar).prepend('<p id="webMark_placeHolder" class="markBar"></p>').hide().slideDown();
+                    '</div>'
+                ];
+                bookMarkBar = bookMarkBar.concat(operateBtn);
+                bookMarkBar.push('</div>');
+                $('body').prepend(bookMarkBar.join('')).prepend('<p id="webMark_placeHolder" class="markBar"></p>').hide().slideDown();
+
+                $("#webMark_bar .search").focus(function () {
+                    $(this).stop().animate({width: 400}, 'slow');
+                }).blur(function () {
+                    $(this).stop().animate({width: 150}, 'slow');
+                });
 
                 $("#webMark_close_btn").click(function () {
                     $(".markBar").remove();

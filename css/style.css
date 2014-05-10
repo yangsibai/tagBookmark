@@ -39,9 +39,19 @@
     overflow: hidden;
 }
 
+#webMark_bar .search {
+    position: fixed;
+    width: 150px;
+    height: 25px;
+    padding: 1px 3px;
+    border-radius: 3px;
+    border: none;
+    margin: 2px 0;
+}
+
 #webMark_bar .tag_list {
     float: left;
-    margin: 2px 80px 2px 150px;
+    margin: 2px 80px 2px 170px;
     padding: 0;
 }
 

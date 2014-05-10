@@ -8,6 +8,8 @@ client.authDriver(new Dropbox.AuthDriver.ChromeExtension({
 
 var isCommunicateDropbox = false;
 
+var bookmarksData;
+
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         var cmd = request.cmd;
@@ -27,6 +29,35 @@ chrome.runtime.onMessage.addListener(
                     break;
                 }
             }
+        }
+        else if (cmd === 'search') {
+            var keyword = request.keyword;
+            if (typeof bookmarksData === 'undefined') {
+                bookmarksData = JSON.parse(localStorage.data).bookmarks;
+            }
+            var result = [];
+            for (var i = 0; i < bookmarksData.length; i++) {
+                if (result.length >= 10) {
+                    break;
+                }
+                var bookmark = bookmarksData[i];
+                if (bookmark.title.indexOf(keyword) !== -1) {
+                    result.push(bookmark);
+                }
+                else if (bookmark.url.indexOf(keyword) !== -1) {
+                    result.push(bookmark);
+                }
+                else {
+                    for (var j = 0; j < bookmark.tags.length; j++) {
+                        var tag = bookmark.tags[j];
+                        if (tag.indexOf(keyword) !== -1) {
+                            result.push(bookmark);
+                            break;
+                        }
+                    }
+                }
+            }
+            sendResponse(result);
         }
     }
 );

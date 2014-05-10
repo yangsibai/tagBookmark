@@ -43,6 +43,16 @@
                     $(this).stop().animate({width: 400}, 'slow');
                 }).blur(function () {
                     $(this).stop().animate({width: 150}, 'slow');
+                }).bind('input propertychange', function () {
+                    var time = new Date();
+                    var keyword = $(this).val();
+                    chrome.runtime.sendMessage({
+                        cmd: 'search',
+                        keyword: keyword
+                    }, function (result) {
+                        var end = new Date();
+                        console.log('找到 ' + result.length + ' 个结果,耗时：' + (end - time));
+                    });
                 });
 
                 $("#webMark_close_btn").click(function () {

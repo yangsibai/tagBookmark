@@ -20,7 +20,7 @@
                         tag.name,
                         '</span>',
                         '<span class="count">',
-                        tag.links.length,
+                        tag.count,
                         '</span>',
                         '</li>'
                     ].join('');
@@ -82,27 +82,30 @@
                         tag: tag
                     }, function (links) {
                         if (links instanceof Array && links.length > 0) {
-                            var popDiv = '<div class="pop"><div class="arrow"></div>';
-                            var ol = '<ol class="bookmark_list">';
+                            var popDiv = [];
+                            popDiv.push('<div class="pop"><div class="arrow"></div>');
+                            popDiv.push('<ol class="bookmark_list">');
+
                             for (var i = 0; i < links.length; i++) {
                                 var link = links[i];
-                                var li = [
-                                    '<li class="bookmark" title="',
-                                    link.url,
-                                    '">',
-                                    '<a target="_blank" href="',
-                                    link.url,
-                                    '">',
-                                    link.title,
-                                    '</a></li>'
-                                ].join('');
-                                ol += li;
+                                popDiv.push('<li class="bookmark" title="');
+                                popDiv.push(link.url);
+                                popDiv.push('"><a target="_blank" href="');
+                                popDiv.push(link.url);
+                                popDiv.push('">');
+                                popDiv.push(link.title);
+                                popDiv.push('</a>');
+                                for (var j = 0; j < link.tags.length; j++) {
+                                    popDiv.push('<span class="b_tag">');
+                                    popDiv.push(link.tags[j]);
+                                    popDiv.push('</span>');
+                                }
+                                popDiv.push('</li>');
                             }
-                            ol += '</ol>';
+                            popDiv.push('</ol>');
                         }
-                        popDiv += ol;
-                        popDiv += '</div>';
-                        $('#webMark_bar').append(popDiv);
+                        popDiv.push('</div>');
+                        $('#webMark_bar').append(popDiv.join(''));
                         var y = position.top + 14;
                         var x = position.left;
                         if (x < 100) {

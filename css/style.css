@@ -66,6 +66,14 @@
     line-height: 18px;
 }
 
+#webMark_bar .b_tag {
+    padding: 0 3px;
+    background-color: #dddddd;
+    margin: 0 2px;
+    font-size: 12px;
+    border-radius: 2px;
+}
+
 #webMark_bar .tag_list .tag:hover {
     border: 1px solid #fefefe;
     background-color: #fcfcfc;

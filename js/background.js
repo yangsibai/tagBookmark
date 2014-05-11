@@ -1,3 +1,10 @@
+if (typeof localStorage.data === 'undefined') {
+    localStorage.data = JSON.stringify({
+        tags: [],
+        bookmarks: []
+    });
+}
+
 var client = new Dropbox.Client({
     key: "2l9256omgxuptj7"
 });
@@ -16,19 +23,26 @@ chrome.runtime.onMessage.addListener(
         if (cmd === 'getTags') {
             var data = JSON.parse(localStorage.data);
             data.tags.sort(function (a, b) {
-                return b.links.length - a.links.length;
+                return b.count - a.count;
             });
             sendResponse(data.tags);
         } else if (cmd === 'getLinksByTag') {
-            var data = JSON.parse(localStorage.data);
-            var tags = data.tags;
-            for (var i = 0; i < tags.length; i++) {
-                var tag = tags[i];
-                if (tag.name === request.tag) {
-                    sendResponse(tag.links);
-                    break;
+            var tag = request.tag;
+            var links = [];
+            if (typeof bookmarksData === 'undefined') {
+                bookmarksData = JSON.parse(localStorage.data).bookmarks;
+            }
+            for (var i = 0; i < bookmarksData.length; i++) {
+                var bookmark = bookmarksData[i];
+                var tags = bookmark.tags;
+                for (var j = 0; j < tags.length; j++) {
+                    if (tags[j] === tag) {
+                        links.push(bookmark);
+                        break;
+                    }
                 }
             }
+            sendResponse(links);
         }
         else if (cmd === 'search') {
             var keyword = request.keyword;
@@ -83,11 +97,13 @@ var getBookmark = function (url) {
     }
 
     var data = JSON.parse(localStorage.data);
-    var bookmarks = data.bookmarks;
-    for (var i = 0; i < bookmarks.length; i++) {
-        var bookmark = bookmarks[i];
-        if (bookmark.url === url) {
-            return bookmark;
+    if (typeof data !== 'undefined' && data.bookmarks instanceof  Array) {
+        var bookmarks = data.bookmarks;
+        for (var i = 0; i < bookmarks.length; i++) {
+            var bookmark = bookmarks[i];
+            if (bookmark.url === url) {
+                return bookmark;
+            }
         }
     }
     return null;
@@ -122,7 +138,6 @@ chrome.runtime.onInstalled.addListener(function () {
             client.readFile('data.json', function (err, content, stat, rangeInfo) {
                 isCommunicateDropbox = false;
                 if (!err) {
-                    localStorage.data = content || '{}';
                     chrome.notifications.create('notify', {
                         type: 'basic',
                         title: 'Load data success',
@@ -131,13 +146,13 @@ chrome.runtime.onInstalled.addListener(function () {
                     }, function (notifyId) {
                         setTimeout(function () {
                             chrome.notifications.clear(notifyId, function () {
-                                mergeExistBookmarks(JSON.parse(content));
+                                mergeExistBookmarks(content);
                             });
-                        }, 2000);
+                        }, 1000);
                     });
                 }
                 else {
-                    mergeExistBookmarks(JSON.parse(content));
+                    mergeExistBookmarks(content);
                 }
             });
         }
@@ -145,10 +160,13 @@ chrome.runtime.onInstalled.addListener(function () {
 });
 
 function mergeExistBookmarks(existData) {
-    var data = existData || {
-        "tags": [],
-        "bookmarks": []
-    };
+    var data = existData;
+    if (typeof existData === 'undefined') {
+        data = {
+            "tags": [],
+            "bookmarks": []
+        };
+    }
 
     chrome.notifications.create('notify', {
         type: 'progress',
@@ -229,12 +247,7 @@ function addBookmark(data, obj, save, cb) {
             for (var j = 0; j < data.tags.length; j++) {
                 var tag = data.tags[j];
                 if (tag.name === tmpTag) {
-                    tag.links.push({
-                        "id": obj.id,
-                        "title": title,
-                        "url": url
-                    });
-                    tag.lastModifyTime = new Date().getTime();
+                    tag.count += 1;
                     hasPush = true;
                     break;
                 }
@@ -243,12 +256,7 @@ function addBookmark(data, obj, save, cb) {
                 data.tags.push({
                     "name": tmpTag,
                     "lastModifyTime": new Date().getTime(),
-                    links: [
-                        {
-                            "title": title,
-                            "url": url
-                        }
-                    ]
+                    "count": 1
                 });
             }
         }

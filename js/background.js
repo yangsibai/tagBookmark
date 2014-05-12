@@ -15,25 +15,27 @@ client.authDriver(new Dropbox.AuthDriver.ChromeExtension({
 
 var isCommunicateDropbox = false;
 
-var bookmarksData;
+var cacheData;
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         var cmd = request.cmd;
         if (cmd === 'getTags') {
-            var data = JSON.parse(localStorage.data);
-            data.tags.sort(function (a, b) {
+            if (typeof cacheData === 'undefined') {
+                cacheData = JSON.parse(localStorage.data);
+            }
+            cacheData.tags.sort(function (a, b) {
                 return b.count - a.count;
             });
-            sendResponse(data.tags);
+            sendResponse(cacheData.tags);
         } else if (cmd === 'getLinksByTag') {
             var tag = request.tag;
             var links = [];
-            if (typeof bookmarksData === 'undefined') {
-                bookmarksData = JSON.parse(localStorage.data).bookmarks;
+            if (typeof cacheData === 'undefined') {
+                cacheData = JSON.parse(localStorage.data);
             }
-            for (var i = 0; i < bookmarksData.length; i++) {
-                var bookmark = bookmarksData[i];
+            for (var i = 0; i < cacheData.bookmarks.length; i++) {
+                var bookmark = cacheData.bookmarks[i];
                 var tags = bookmark.tags;
                 for (var j = 0; j < tags.length; j++) {
                     if (tags[j] === tag) {
@@ -46,15 +48,15 @@ chrome.runtime.onMessage.addListener(
         }
         else if (cmd === 'search') {
             var keyword = request.keyword;
-            if (typeof bookmarksData === 'undefined') {
-                bookmarksData = JSON.parse(localStorage.data).bookmarks;
+            if (typeof cacheData === 'undefined') {
+                cacheData = JSON.parse(localStorage.data);
             }
             var result = [];
-            for (var i = 0; i < bookmarksData.length; i++) {
+            for (var i = 0; i < cacheData.bookmarks.length; i++) {
                 if (result.length >= 10) {
                     break;
                 }
-                var bookmark = bookmarksData[i];
+                var bookmark = cacheData.bookmarks[i];
                 if (bookmark.title.indexOf(keyword) !== -1) {
                     result.push(bookmark);
                 }

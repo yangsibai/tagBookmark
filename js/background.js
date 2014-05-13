@@ -180,6 +180,11 @@ chrome.runtime.onInstalled.addListener(function () {
 
 function mergeExistBookmarks(existData) {
     var data = existData;
+
+    if (typeof existData === 'string') {
+        data = JSON.parse(existData);
+    }
+
     if (typeof existData === 'undefined') {
         data = {
             "tags": [],

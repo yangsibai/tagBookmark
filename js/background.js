@@ -21,62 +21,79 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         var cmd = request.cmd;
         if (cmd === 'getTags') {
-            if (typeof cacheData === 'undefined') {
-                cacheData = JSON.parse(localStorage.data);
-            }
-            cacheData.tags.sort(function (a, b) {
-                return b.count - a.count;
+            getData(function (data) {
+                data.tags.sort(function (a, b) {
+                    return b.count - a.count;
+                });
+                sendResponse(data.tags);
             });
-            sendResponse(cacheData.tags);
         } else if (cmd === 'getLinksByTag') {
             var tag = request.tag;
-            var links = [];
-            if (typeof cacheData === 'undefined') {
-                cacheData = JSON.parse(localStorage.data);
-            }
-            for (var i = 0; i < cacheData.bookmarks.length; i++) {
-                var bookmark = cacheData.bookmarks[i];
-                var tags = bookmark.tags;
-                for (var j = 0; j < tags.length; j++) {
-                    if (tags[j] === tag) {
-                        links.push(bookmark);
-                        break;
-                    }
-                }
-            }
-            sendResponse(links);
-        }
-        else if (cmd === 'search') {
-            var keyword = request.keyword;
-            if (typeof cacheData === 'undefined') {
-                cacheData = JSON.parse(localStorage.data);
-            }
-            var result = [];
-            for (var i = 0; i < cacheData.bookmarks.length; i++) {
-                if (result.length >= 10) {
-                    break;
-                }
-                var bookmark = cacheData.bookmarks[i];
-                if (bookmark.title.indexOf(keyword) !== -1) {
-                    result.push(bookmark);
-                }
-                else if (bookmark.url.indexOf(keyword) !== -1) {
-                    result.push(bookmark);
-                }
-                else {
-                    for (var j = 0; j < bookmark.tags.length; j++) {
-                        var tag = bookmark.tags[j];
-                        if (tag.indexOf(keyword) !== -1) {
-                            result.push(bookmark);
+            getData(function (data) {
+                var links = [];
+                for (var i = 0; i < data.bookmarks.length; i++) {
+                    var bookmark = data.bookmarks[i];
+                    var tags = bookmark.tags;
+                    for (var j = 0; j < tags.length; j++) {
+                        if (tags[j] === tag) {
+                            links.push(bookmark);
                             break;
                         }
                     }
                 }
-            }
-            sendResponse(result);
+                sendResponse(links);
+            });
+        }
+        else if (cmd === 'search') {
+            var keyword = request.keyword;
+            getData(function (data) {
+                var result = [];
+                if (keyword && keyword.trim() !== '') {
+                    for (var i = 0; i < cacheData.bookmarks.length; i++) {
+                        if (result.length >= 10) {
+                            break;
+                        }
+                        var bookmark = cacheData.bookmarks[i];
+                        if (bookmark.title.indexOf(keyword) !== -1) {
+                            result.push(bookmark);
+                        }
+                        else if (bookmark.url.indexOf(keyword) !== -1) {
+                            result.push(bookmark);
+                        }
+                        else {
+                            for (var j = 0; j < bookmark.tags.length; j++) {
+                                var tag = bookmark.tags[j];
+                                if (tag.indexOf(keyword) !== -1) {
+                                    result.push(bookmark);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    result = data.bookmarks.slice(10);
+                }
+                sendResponse(result);
+            });
         }
     }
 );
+
+/**
+ * get bookmark data
+ * @param cb
+ */
+function getData(cb) {
+    if (typeof cacheData === 'undefined') {
+        cacheData = JSON.parse(localStorage.data);
+        cb(cacheData);
+    }
+    else {
+        cb(cacheData);
+        cacheData = JSON.parse(localStorage.data);
+    }
+}
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     chrome.pageAction.show(tabId);

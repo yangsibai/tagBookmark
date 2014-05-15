@@ -188,7 +188,8 @@
 }
 
 #webMark_bar .pop {
-    width: 250px;
+    min-width: 300px;
+    max-width: 400px;
     position: fixed;
     margin-top: 10px;
     margin-left: -100px;

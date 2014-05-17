@@ -41,21 +41,17 @@
 
                 $("#webMark_bar .search").focus(function () {
                     $(this).stop().animate({width: 400}, 'slow');
+                    var keyword = $(this).val();
+                    var element = $(this);
+                    var position = element.position();
+                    search(keyword, position.top, position.left);
                 }).blur(function () {
                     $(this).stop().animate({width: 150}, 'slow');
                 }).bind('input propertychange', function () {
-//                    var time = new Date();
                     var keyword = $(this).val();
                     var element = $(this);
-                    var postion = element.position();
-                    chrome.runtime.sendMessage({
-                        cmd: 'search',
-                        keyword: keyword
-                    }, function (result) {
-//                        var end = new Date();
-//                        console.log('找到 ' + result.length + ' 个结果,耗时：' + (end - time));
-                        pop(result, postion.top, postion.left);
-                    });
+                    var position = element.position();
+                    search(keyword, position.top, position.left);
                 });
 
                 $("#webMark_close_btn").click(function () {
@@ -91,59 +87,78 @@
         });
     };
 
-    function pop(links, top, left) {
-        var bookmarks = [];
-
-        if (links instanceof Array && links.length > 0) {
-            for (var i = 0; i < links.length; i++) {
-                var link = links[i];
-                bookmarks.push('<li class="bookmark" title="');
-                bookmarks.push(link.url);
-                bookmarks.push('"><a target="_blank" href="');
-                bookmarks.push(link.url);
-                bookmarks.push('">');
-                bookmarks.push(link.title);
-                bookmarks.push('</a>');
-                for (var j = 0; j < link.tags.length; j++) {
-                    bookmarks.push('<span class="b_tag">');
-                    bookmarks.push(link.tags[j]);
-                    bookmarks.push('</span>');
-                }
-                bookmarks.push('</li>');
-            }
-        }
-
-        if ($('.pop').length) {
-            $('.pop .bookmark_list').empty().append(bookmarks.join(''));
-        }
-        else {
-            var popDiv = [];
-            popDiv.push('<div class="pop"><div class="arrow"></div>');
-            popDiv.push('<ol class="bookmark_list">');
-
-            popDiv = popDiv.concat(bookmarks);
-
-            popDiv.push('</ol>');
-            popDiv.push('</div>');
-            $('#webMark_bar').append(popDiv.join(''));
-            var y = top + 14;
-            var x = left;
-            if (x < 100) {
-                $("#webMark_bar .arrow").css('margin-left', x + 15);
-                x = 110;
-            }
-            $("#webMark_bar .pop").css('top', y).css('left', x);
-            var backgroundImageUrl = chrome.extension.getURL('img/crossword.png');
-            $("#webMark_bar .bookmark_list").css('background-image', 'url(' + backgroundImageUrl + ')');
-        }
-    }
-
     showHeart();
 
     $(document).bind('mouseup', function (event) {
         var container = $('#webMark_bar .pop');
-        if (!container.is(event.target) && container.has(event.target).length == 0) {
+        if (!container.is(event.target) && container.has(event.target).length == 0 && $(event.target).attr('class') !== 'search') {
             container.remove();
         }
     });
 });
+
+/**
+ * 搜索
+ * @param keyword
+ * @param top
+ * @param left
+ */
+function search(keyword, top, left) {
+//                    var time = new Date();
+    chrome.runtime.sendMessage({
+        cmd: 'search',
+        keyword: keyword
+    }, function (result) {
+//                        var end = new Date();
+//                        console.log('找到 ' + result.length + ' 个结果,耗时：' + (end - time));
+        pop(result, top, left);
+    });
+}
+
+
+function pop(links, top, left) {
+    var bookmarks = [];
+
+    if (links instanceof Array && links.length > 0) {
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            bookmarks.push('<li class="bookmark" title="');
+            bookmarks.push(link.url);
+            bookmarks.push('"><a target="_blank" href="');
+            bookmarks.push(link.url);
+            bookmarks.push('">');
+            bookmarks.push(link.title);
+            bookmarks.push('</a>');
+            for (var j = 0; j < link.tags.length; j++) {
+                bookmarks.push('<span class="b_tag">');
+                bookmarks.push(link.tags[j]);
+                bookmarks.push('</span>');
+            }
+            bookmarks.push('</li>');
+        }
+    }
+
+    if ($('.pop').length) {
+        $('.pop .bookmark_list').empty().append(bookmarks.join(''));
+    }
+    else {
+        var popDiv = [];
+        popDiv.push('<div class="pop"><div class="arrow"></div>');
+        popDiv.push('<ol class="bookmark_list">');
+
+        popDiv = popDiv.concat(bookmarks);
+
+        popDiv.push('</ol>');
+        popDiv.push('</div>');
+        $('#webMark_bar').append(popDiv.join(''));
+        var y = top + 14;
+        var x = left;
+        if (x < 100) {
+            $("#webMark_bar .arrow").css('margin-left', x + 15);
+            x = 110;
+        }
+        $("#webMark_bar .pop").css('top', y).css('left', x);
+        var backgroundImageUrl = chrome.extension.getURL('img/crossword.png');
+        $("#webMark_bar .bookmark_list").css('background-image', 'url(' + backgroundImageUrl + ')');
+    }
+}

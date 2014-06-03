@@ -264,27 +264,7 @@ function addBookmark(data, obj, save, cb) {
         var addTime = obj.addTime || new Date().getTime();
 
         var tagArray = trimRepeat(obj.tags.split(','));
-        for (var i = 0; i < tagArray.length; i++) {
-            var tmpTag = tagArray[i];
-
-            var hasPush = false;
-            for (var j = 0; j < data.tags.length; j++) {
-                var tag = data.tags[j];
-                if (tag.name === tmpTag) {
-                    tag.count += 1;
-                    hasPush = true;
-                    break;
-                }
-            }
-            if (!hasPush) {
-                data.tags.push({
-                    "name": tmpTag,
-                    "lastModifyTime": new Date().getTime(),
-                    "count": 1
-                });
-            }
-        }
-
+        
         var hasExist = false;
         for (var i = 0; i < data.bookmarks.length; i++) {
             var bookmark = data.bookmarks[i];
@@ -305,6 +285,26 @@ function addBookmark(data, obj, save, cb) {
                 "lastAccessTime": new Date().getTime(),
                 "accessCount": 1
             });
+            for (var i = 0; i < tagArray.length; i++) {
+                var tmpTag = tagArray[i];
+
+                var hasPush = false;
+                for (var j = 0; j < data.tags.length; j++) {
+                    var tag = data.tags[j];
+                    if (tag.name === tmpTag) {
+                        tag.count += 1;
+                        hasPush = true;
+                        break;
+                    }
+                }
+                if (!hasPush) {
+                    data.tags.push({
+                        "name": tmpTag,
+                        "lastModifyTime": new Date().getTime(),
+                        "count": 1
+                    });
+                }
+            }
         }
 
         if (save) {

@@ -1,10 +1,14 @@
 ﻿$(document).ready(function () {
-    var showHeart = function () {
-        var heart = '<div id="webMark_heart"></div>';
-        $('body').append(heart);
+    $(document).bind('mouseup', function (event) {
+        var container = $('#webMark_bar .pop');
+        if (!container.is(event.target) && container.has(event.target).length == 0 && $(event.target).attr('class') !== 'search') {
+            container.remove();
+        }
+    });
 
-        $("#webMark_heart").click(function () {
-            $(this).remove();
+
+    $(document).bind('keyup', function (event) {
+        if (event.altKey && event.keyCode === 79) {
             chrome.runtime.sendMessage({
                 cmd: 'getTags'
             }, function (tags) {
@@ -56,7 +60,6 @@
 
                 $("#webMark_close_btn").click(function () {
                     $(".markBar").remove();
-                    showHeart();
                 });
 
                 $("#webMark_down_btn").click(function () {
@@ -84,15 +87,6 @@
                     });
                 });
             });
-        });
-    };
-
-    showHeart();
-
-    $(document).bind('mouseup', function (event) {
-        var container = $('#webMark_bar .pop');
-        if (!container.is(event.target) && container.has(event.target).length == 0 && $(event.target).attr('class') !== 'search') {
-            container.remove();
         }
     });
 });

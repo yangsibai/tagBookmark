@@ -1,4 +1,7 @@
 ﻿$(document).ready(function () {
+
+    var isShowSearchBar = false;
+
     $(document).bind('mouseup', function (event) {
         var container = $('#webMark_bar .pop');
         if (!container.is(event.target) && container.has(event.target).length == 0 && $(event.target).attr('class') !== 'search') {
@@ -6,89 +9,103 @@
         }
     });
 
-
     $(document).bind('keyup', function (event) {
+        if (event.keyCode === 27) {
+            removeMarkbar();
+            return;
+        }
+
         if (event.altKey && event.keyCode === 79) {
-            chrome.runtime.sendMessage({
-                cmd: 'getTags'
-            }, function (tags) {
-                var bookMarkBar = [];
-                bookMarkBar.push('<div id="webMark_bar" class="markBar">');
-                bookMarkBar.push('<input type="text" class="search" value="" placeholder="name or tag"/>');
-                bookMarkBar.push('<ul class="tag_list">');
-                for (var i = 0; i < tags.length; i++) {
-                    var tag = tags[i];
-                    var span = [
-                        '<li class="tag">',
-                        '<span class="name">',
-                        tag.name,
-                        '</span>',
-                        '<span class="count">',
-                        tag.count,
-                        '</span>',
-                        '</li>'
-                    ].join('');
+            if (isShowSearchBar) {
+                removeMarkbar();
+            }
+            else {
+                isShowSearchBar = true;
+                chrome.runtime.sendMessage({
+                    cmd: 'getTags'
+                }, function (tags) {
+                    var bookMarkBar = [];
+                    bookMarkBar.push('<div id="webMark_bar" class="markBar">');
+                    bookMarkBar.push('<input type="text" class="search" value="" placeholder="name or tag"/>');
+                    bookMarkBar.push('<ul class="tag_list">');
+                    for (var i = 0; i < tags.length; i++) {
+                        var tag = tags[i];
+                        var span = [
+                            '<li class="tag">',
+                            '<span class="name">',
+                            tag.name,
+                            '</span>',
+                            '<span class="count">',
+                            tag.count,
+                            '</span>',
+                            '</li>'
+                        ].join('');
 
-                    bookMarkBar.push(span);
-                }
-                bookMarkBar.push('</ul>');
-                var operateBtn = [
-                    '<div class="operate">',
-                    '<button id="webMark_down_btn"></button>',
-                    '<button id="webMark_up_btn"></button>',
-                    '<button id="webMark_close_btn"></button>',
-                    '</div>'
-                ];
-                bookMarkBar = bookMarkBar.concat(operateBtn);
-                bookMarkBar.push('</div>');
-                $('body').prepend(bookMarkBar.join('')).prepend('<p id="webMark_placeHolder" class="markBar"></p>').hide().slideDown();
+                        bookMarkBar.push(span);
+                    }
+                    bookMarkBar.push('</ul>');
+                    var operateBtn = [
+                        '<div class="operate">',
+                        '<button id="webMark_down_btn"></button>',
+                        '<button id="webMark_up_btn"></button>',
+                        '<button id="webMark_close_btn"></button>',
+                        '</div>'
+                    ];
+                    bookMarkBar = bookMarkBar.concat(operateBtn);
+                    bookMarkBar.push('</div>');
 
-                $("#webMark_bar .search").focus(function () {
-                    $(this).stop().animate({width: 400}, 'slow');
-                    var keyword = $(this).val();
-                    var element = $(this);
-                    var position = element.position();
-                    search(keyword, position.top, position.left);
-                }).blur(function () {
-                    $(this).stop().animate({width: 150}, 'slow');
-                }).bind('input propertychange', function () {
-                    var keyword = $(this).val();
-                    var element = $(this);
-                    var position = element.position();
-                    search(keyword, position.top, position.left);
-                });
+                    $('body').prepend(bookMarkBar.join(''));
 
-                $("#webMark_close_btn").click(function () {
-                    $(".markBar").remove();
-                });
+                    $("#webMark_bar .search").focus(function () {
+                        $(this).stop().animate({width: 400}, 'slow');
+                        var keyword = $(this).val();
+                        var element = $(this);
+                        var position = element.position();
+                        search(keyword, position.top, position.left);
+                    }).blur(function () {
+                        $(this).stop().animate({width: 150}, 'slow');
+                    }).bind('input propertychange', function () {
+                        var keyword = $(this).val();
+                        var element = $(this);
+                        var position = element.position();
+                        search(keyword, position.top, position.left);
+                    });
 
-                $("#webMark_down_btn").click(function () {
-                    $(this).hide();
-                    $("#webMark_bar").css('height', 'auto');
-                    $("#webMark_up_btn").show();
-                });
+                    $("#webMark_close_btn").click(removeMarkbar);
 
-                $("#webMark_up_btn").click(function () {
-                    $(this).hide();
-                    $("#webMark_bar").css('height', '30px');
-                    $("#webMark_down_btn").show();
-                });
+                    $("#webMark_down_btn").click(function () {
+                        $(this).hide();
+                        $("#webMark_bar").css('height', 'auto');
+                        $("#webMark_up_btn").show();
+                    });
 
-                $("#webMark_bar .tag").click(function () {
-                    $('.pop').remove();
-                    var ele = $(this);
-                    var position = ele.position();
-                    var tag = $(this).children('.name').text();
-                    chrome.runtime.sendMessage({
-                        cmd: 'getLinksByTag',
-                        tag: tag
-                    }, function (links) {
-                        pop(links, position.top, position.left);
+                    $("#webMark_up_btn").click(function () {
+                        $(this).hide();
+                        $("#webMark_bar").css('height', '30px');
+                        $("#webMark_down_btn").show();
+                    });
+
+                    $("#webMark_bar .tag").click(function () {
+                        $('.pop').remove();
+                        var ele = $(this);
+                        var position = ele.position();
+                        var tag = $(this).children('.name').text();
+                        chrome.runtime.sendMessage({
+                            cmd: 'getLinksByTag',
+                            tag: tag
+                        }, function (links) {
+                            pop(links, position.top, position.left);
+                        });
                     });
                 });
-            });
+            }
         }
     });
+
+    function removeMarkbar() {
+        isShowSearchBar = false;
+        $(".markBar").remove();
+    }
 });
 
 /**
@@ -145,6 +162,10 @@ function pop(links, top, left) {
         popDiv.push('</ol>');
         popDiv.push('</div>');
         $('#webMark_bar').append(popDiv.join(''));
+
+        var barPostion = $("#webMark_bar").position();
+        top = top + barPostion.top;
+        left = left + barPostion.left;
         var y = top + 14;
         var x = left;
         if (x < 100) {

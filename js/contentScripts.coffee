@@ -1,7 +1,7 @@
 $(document).ready ->
 	isShowMarkbar = false
 	isShowPop = false
-	popChooseIndex = -1;
+	popChooseIndex = -1; # 从 -1 开始
 	maxChooseCount = 0;
 
 	###
@@ -33,6 +33,8 @@ $(document).ready ->
 					chooseNext()
 				when 38 # `up arrow`
 					choosePrevious()
+				when 13 # `enter`
+					openChoose()
 
 
 	###
@@ -189,15 +191,22 @@ $(document).ready ->
 	###
 	removePop = ->
 		isShowPop = false
+		popChooseIndex = -1
 		$("#webMark_bar .pop").remove()
 
 	choosePrevious = ->
-		chooseIndex(--popChooseIndex)
+		if popChooseIndex > 0
+			chooseIndex(--popChooseIndex)
 
 
 	chooseNext = ->
-		chooseIndex(++popChooseIndex)
+		if popChooseIndex + 1 < maxChooseCount
+			chooseIndex(++popChooseIndex)
 
 	chooseIndex = (index) ->
 		$('.pop li').removeClass 'choose'
 		$('.pop li:eq(' + index + ')').addClass 'choose'
+
+	openChoose = ->
+		if popChooseIndex > -1
+			window.open $('.pop .choose a').attr "href"

@@ -209,3 +209,7 @@
     background-color: #37A;
     color: #F0F0F0;
 }
+
+#webMark_bar .bookmark_list .choose {
+    background-color: #ddd;
+}

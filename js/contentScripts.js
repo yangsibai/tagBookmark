@@ -31,6 +31,8 @@
               return showMarkbar();
             }
             break;
+          case 84:
+            return window.open(chrome.extension.getURL("index.html"));
           case 88:
             return removeMarkbar();
         }
@@ -57,10 +59,7 @@
         cmd: "getTags"
       }, function(tags) {
         var bookMarkBar, i, operateBtn, span, tag;
-        bookMarkBar = [];
-        bookMarkBar.push("<div id=\"webMark_bar\" class=\"markBar\">");
-        bookMarkBar.push("<input type=\"text\" class=\"search\" value=\"\" placeholder=\"name or tag\"/>");
-        bookMarkBar.push("<ul class=\"tag_list\">");
+        bookMarkBar = ["<div id=\"webMark_bar\" class=\"markBar\">", "<input type=\"text\" class=\"search\" value=\"\" placeholder=\"name or tag\"/>", "<ul class=\"tag_list\">"];
         i = 0;
         while (i < tags.length) {
           tag = tags[i];
@@ -73,6 +72,7 @@
         bookMarkBar = bookMarkBar.concat(operateBtn);
         bookMarkBar.push("</div>");
         $("body").prepend(bookMarkBar.join(""));
+        $("#webMark_bar").css("background", "url(" + (chrome.extension.getURL('img/wood.jpg')) + ")");
         $("#webMark_bar .search").focus();
         $("#webMark_bar .search").focus(function() {
           var element, keyword, position;

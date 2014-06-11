@@ -23,6 +23,8 @@ $(document).ready ->
 						removeMarkbar() # `Alt+o` to remove mark bar if mark bar is show
 					else # `o`
 						showMarkbar() # `Alt+o` to show mark bar if mark bar is hide
+				when 84 # `t`
+					window.open chrome.extension.getURL "index.html"
 				when 88 # `x`
 					removeMarkbar()
 		else
@@ -45,10 +47,11 @@ $(document).ready ->
 		chrome.runtime.sendMessage
 			cmd: "getTags"
 		, (tags) ->
-			bookMarkBar = []
-			bookMarkBar.push "<div id=\"webMark_bar\" class=\"markBar\">"
-			bookMarkBar.push "<input type=\"text\" class=\"search\" value=\"\" placeholder=\"name or tag\"/>"
-			bookMarkBar.push "<ul class=\"tag_list\">"
+			bookMarkBar = [
+				"<div id=\"webMark_bar\" class=\"markBar\">"
+				"<input type=\"text\" class=\"search\" value=\"\" placeholder=\"name or tag\"/>"
+				"<ul class=\"tag_list\">"
+			]
 			i = 0
 
 			while i < tags.length
@@ -72,6 +75,7 @@ $(document).ready ->
 			bookMarkBar = bookMarkBar.concat(operateBtn)
 			bookMarkBar.push "</div>"
 			$("body").prepend bookMarkBar.join("")
+			$("#webMark_bar").css("background", "url(#{chrome.extension.getURL('img/wood.jpg')})")
 
 			$("#webMark_bar .search").focus()
 
